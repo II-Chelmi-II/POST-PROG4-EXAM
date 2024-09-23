@@ -14,10 +14,10 @@ import java.util.Map;
 
 @Service
 public class PatrimoineService {
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper; // Utilisé pour la sérialisation/desérialisation JSON
 
     private static final String FILE_PATH = "patrimoines.json";
-    private Map<String, Patrimoine> patrimoines = new HashMap<>();
+    private Map<String, Patrimoine> patrimoines = new HashMap<>(); // Stockage des patrimoines en mémoire
 
     public PatrimoineService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -36,9 +36,9 @@ public class PatrimoineService {
     private void saveToFile(String id) {
         try {
             Map<String, Patrimoine> patrimoinesExistant = loadExistingPatrimoines();
-            patrimoinesExistant.put(id, patrimoines.get(id));
+            patrimoinesExistant.put(id, patrimoines.get(id)); // Mise à jour de la collection
             String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(patrimoinesExistant);
-            Files.write(Paths.get(FILE_PATH), json.getBytes());
+            Files.write(Paths.get(FILE_PATH), json.getBytes()); // Écriture dans le fichier
         } catch (IOException e) {
             throw new RuntimeException("Erreur lors de la sauvegarde du patrimoine : " + e.getMessage());
         }
@@ -49,10 +49,10 @@ public class PatrimoineService {
             return objectMapper.readValue(Files.readAllBytes(Paths.get(FILE_PATH)),
                     new TypeReference<Map<String, Patrimoine>>() {});
         }
-        return new HashMap<>();
+        return new HashMap<>(); // Retourne une carte vide si le fichier n'existe pas
     }
 
-    // Méthode pour réinitialiser l'état
+    // Réinitialisation de l'état des patrimoines
     public void reset() {
         patrimoines.clear();
     }
